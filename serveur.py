@@ -3,7 +3,7 @@ import socket
 def server():
 
     host = ""
-    port = 5100
+    port = 10000
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -12,7 +12,14 @@ def server():
     server_socket.listen(2)
     conn, address = server_socket.accept()
     print("Connection from: " + str(address))
-    connected = True
+
+
+
+
+
+
+
+   """ connected = True
     print("connected to server")
     while True:
 
@@ -44,10 +51,7 @@ def server():
                     print("re-connection successful")
                 except socket.error:
                     sleep(2)
-    conn.close()
-
-
-
+    conn.close()"""
 
 
 
@@ -66,10 +70,6 @@ def server():
       #  data = input(' -> ')
       #  conn.send(data.encode())
    # conn.close()
-
-
-
-
 
 
 
