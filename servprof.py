@@ -1,8 +1,29 @@
 import socket
-
+import sys , subprocess
+import os,time
 host = ""
 port = 50000
 
+
+def ipconfig():
+    print ("Your OS is ", sys.platform)
+    if sys.platform == 'win32':
+        print (os.system("ipconfig"))
+    elif sys.platform == 'linux2':
+        print (os.system("ifconfig"))
+    time.sleep(5)
+
+
+def ram():
+    cmd = str(subprocess.check_output("wmic computersystem get totalphysicalmemory.", shell=True))
+    return cmd
+
+def Os():
+    cmd=sys.platform
+    if cmd == "win32":
+        print("voici l'OS de votre pc")
+        cmd= str(subprocess.check_output("ver", shell=True))
+        return cmd
 
 def server():
     message = ""
