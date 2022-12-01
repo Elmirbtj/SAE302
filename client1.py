@@ -2,7 +2,7 @@ from threading import Thread
 import socket
 
 Host = "127.0.0.1"
-Port = 1000
+Port = 10000
 
 server_client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server_client.connect((Host,Port))
