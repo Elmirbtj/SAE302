@@ -10,8 +10,30 @@ port = 5001
 
 message_client = ""
 
-def execute_cmd(cmd):
+def execute(cmd):
     return str(cmd)
+
+def ipconfig():
+    print ("Your OS is ", sys.platform)
+    if sys.platform == 'win32':
+        print (os.system("ipconfig"))
+    elif sys.platform == 'linux2':
+        print (os.system("ifconfig"))
+    time.sleep(5)
+
+
+def ram():
+    cmd = str(subprocess.check_output("wmic computersystem get totalphysicalmemory.", shell=True))
+    return cmd
+
+def Os():
+    cmd=sys.platform
+    if cmd == "win32":
+        print("voici l'OS de votre pc")
+        cmd= str(subprocess.check_output("ver", shell=True))
+        return cmd
+
+
 
 def serveur():
     message_client = ""
@@ -34,7 +56,7 @@ def serveur():
                 while message_client.lower() != m_kill and message_client.lower() != m_reset and message_client.lower() != m_disconnect:
                     message_client = conn_client.recv(1024).decode()
                     print(f"Message reçu {message_client}")
-                    execution = execute_cmd(message_client)
+                    execution = execute(message_client)
                     conn_client.send(execution.encode())
 
                 conn_client.close()
