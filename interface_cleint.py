@@ -1,7 +1,7 @@
-# QtGui包含类窗口系统集成、事件处理、二维图形、基本成像、字体和文本。
+
 from PyQt5 import QtGui
-from PyQt5.QtGui import QFont  # 设置字体
-# QtWidgets模块包含创造经典桌面风格的用户界面提供了一套UI元素的类。
+from PyQt5.QtGui import QFont  
+。
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot
 import sys
@@ -9,14 +9,14 @@ import socket
 from threading import Thread
 
 
-class Login(QWidget):  # QWidget类是所有用户界面对象的基类
+class Login(QWidget):  
     def __init__(self):
         QWidget.__init__(self)
-        # 设置窗口的位置和大小
+    
         self.setGeometry(600, 300, 400, 300)
-        # 设置窗口的标题
+  
         self.setWindowTitle("interface")
-        # 添加背景
+  
         palette = QtGui.QPalette()
         icon = QtGui.QPixmap(r'.https://www.shutterstock.com/image-illustration/abstract-wave-technology-background-blue-260nw-2152448863.jpg')
         palette.setBrush(self.backgroundRole(), QtGui.QBrush(icon))
@@ -29,32 +29,32 @@ class Login(QWidget):  # QWidget类是所有用户界面对象的基类
         self.begin_thread()
 
 
-        # 创建鼠标点击事件
+
 
     def on_click(self):
         print("message envoyer")
         self.send_msg()
         self.text2.clear()
 
-    def addUI(self):  # 添加各种组件
+    def addUI(self):  
 
-        # 设置多行文本显示框
-        self.text = QTextBrowser(self)  # 多行文本框是QTextBrowser
+       
+        self.text = QTextBrowser(self)  
         self.text.setGeometry(10, 10, 359, 250)
-        self.text.setStyleSheet('background-color:white;)')  # 设置输入框透明化
+        self.text.setStyleSheet('background-color:white;)')  
 
         self.text2 = QLineEdit(self)
-        # 设置发送消息
+
         self.text2.setPlaceholderText('Envoyer du contenu')
         self.text2.setGeometry(10,260, 300, 30)
-        self.text2.setStyleSheet('background-color:white;)}')  # 设置输入框透明化
+        self.text2.setStyleSheet('background-color:white;)}') 
 
-        # 设置点击按钮
+  
         self.button = QPushButton('envoyer', self)
         self.button.setFont(QFont('truyu', 10, QFont.Bold))
         self.button.setGeometry(310, 260, 60, 30)
         # self.button = button
-        """按钮与鼠标点击事件相关联"""
+
 
     def send(self):
         self.button.clicked.connect(self.on_click)
@@ -84,10 +84,10 @@ class Login(QWidget):  # QWidget类是所有用户界面对象的基类
         self.client.close()
 
 if __name__ == "__main__":
-    # 每一pyqt5应用程序必须创建一个应用程序对象。
+
     app = QApplication(sys.argv)
     dialog = Login()
-    # 显示在屏幕上
+
     dialog.show()
-    # 系统exit()方法确保应用程序干净的退出
+ 
     sys.exit(app.exec())
