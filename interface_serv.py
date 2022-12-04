@@ -9,21 +9,21 @@ m_disconnect = "disconnect"
 m_reset = "reset"
 
 host = "localhost"
-port = 5008
+port = 5004
 
 message_client = ""
 class server:
     def __init__(self):
 
         self.server = socket.socket()
-        self.server.bind((host, port))
-        self.server.listen(5)
+
 
         self.li = []
         self.di = {}
         self.get_con()
 
     def get_con(self):
+        redata = ""
         while True:
             try:
                 con, addr = self.server.accept()
@@ -33,6 +33,18 @@ class server:
                 self.li.append(con)
             except:
                 pass
+
+
+
+       # while True:
+          #  try:
+            #    con, addr = self.server.accept()
+           #     data = 'La connexion est réussie !'
+            #    con.send(data.encode())
+            #    Thread(target=self.get_msg, args=(con, self.li, self.di, addr)).start()
+            #    self.li.append(con)
+           # except:
+           #     pass
 
     def get_msg(self, con, li, di, addr):
         name="dfdf"
@@ -52,9 +64,14 @@ class server:
                 self.close_client(con, addr)
                 break
             if (redata.lower() == "kill"):
+                self.serveur(con,addr,redata)
+                break
+            if (redata.lower() == "disconect"):
+                self.serveur(con,addr,redata)
+                break
+            if (redata.lower() == "kill"):
                 self.kill(con)
                 break
-
             print(di[addr] + ' '  + ':\n' + redata)
             for i in li:
                 i.send((di[addr] + ' ' + ':\n' + redata).encode())
@@ -70,12 +87,6 @@ class server:
     def execute(self,cmd):
         return str(cmd)
 
-    def kill(self, con):
-
-        con.send("disconnect".encode())
-        con.close()
-        self.server.close()
-
     def reset (self,con ,addr,redata,server):
         con.send("reset".encode())
         con.close()
@@ -87,9 +98,17 @@ class server:
         print(redata +"En attente d'un client")
 
 
+    def kill(self,con):
+
+        con.send("disconnect".encode())
+        con.close()
+        self.server.close()
 
 
-    def serveur(self):
+
+
+
+    def serveur(self,con,addr,redata):
         redata = ""
         while redata != "kill":
 

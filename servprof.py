@@ -1,12 +1,13 @@
 import socket
 import sys
+import os
 
 m_kill = "kill"
 m_disconnect = "disconnect"
 m_reset = "reset"
 
 host = "localhost"
-port = 5001
+port = 5002
 
 message_client = ""
 
