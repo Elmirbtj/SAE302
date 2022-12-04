@@ -7,7 +7,7 @@ import time
 class server:
     def __init__(self):
         server = socket.socket()
-        server.bind(('127.0.0.1', 9999))
+        server.bind(('127.0.0.1', 9998))
         server.listen(5)
         self.server = server
         self.li = []
@@ -29,9 +29,9 @@ class server:
         while 1:
             try:
                 redata = con.recv(1024).decode()
-                # print("sdfsdffd" % redata)
+                print("Connection de",redata)
             except Exception as e:
-                # print("", e)
+                print("", e)
                 self.close_client(con, addr)
                 break
             if (redata.upper() == "QUIT"):
@@ -46,7 +46,7 @@ class server:
         self.li.remove(con)
         print("client:", self.li)
         con.close()
-        print(self.di[addr] + "sqdsdqsqd")
+        print(self.di[addr] + " A QUITER")
         for k in self.li:
             k.send((self.di[addr] + "dsfdfsfd").encode())
 

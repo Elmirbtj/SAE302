@@ -24,7 +24,7 @@ class Login(QWidget):  # QWidget类是所有用户界面对象的基类
 
         self.addUI()
         client = socket.socket()
-        client.connect(('127.0.0.1', 9999))
+        client.connect(('127.0.0.1', 9998))
         self.client = client
         self.begin_thread()
 
@@ -40,19 +40,19 @@ class Login(QWidget):  # QWidget类是所有用户界面对象的基类
 
         # 设置多行文本显示框
         self.text = QTextBrowser(self)  # 多行文本框是QTextBrowser
-        self.text.setGeometry(30, 30, 300, 100)
+        self.text.setGeometry(10, 10, 359, 250)
         self.text.setStyleSheet('background-color:white;)')  # 设置输入框透明化
 
         self.text2 = QLineEdit(self)
         # 设置发送消息
         self.text2.setPlaceholderText('Envoyer du contenu')
-        self.text2.setGeometry(30, 160, 300, 30)
+        self.text2.setGeometry(10,260, 300, 30)
         self.text2.setStyleSheet('background-color:white;)}')  # 设置输入框透明化
 
         # 设置点击按钮
         self.button = QPushButton('envoyer', self)
         self.button.setFont(QFont('truyu', 10, QFont.Bold))
-        self.button.setGeometry(270, 220, 60, 30)
+        self.button.setGeometry(310, 260, 60, 30)
         # self.button = button
         """按钮与鼠标点击事件相关联"""
 
