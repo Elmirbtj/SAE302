@@ -1,13 +1,13 @@
 import socket
 import sys
-import os
+import os , subprocess
 
 m_kill = "kill"
 m_disconnect = "disconnect"
 m_reset = "reset"
 
 host = "localhost"
-port = 5005
+port = 5006
 
 message_client = ""
 
@@ -27,14 +27,17 @@ def ram():
     cmd = str(subprocess.check_output("wmic computersystem get totalphysicalmemory.", shell=True))
     return cmd
 
-def Os():
+
+def OS():
     cmd=sys.platform
     if cmd == "win32":
-        print("voici l'OS de votre pc")
-        cmd= str(subprocess.check_output("ver", shell=True))
+        #print("voici l'OS de votre pc")
+
         return cmd
 
-
+def cpu ():
+    cmd = str(subprocess.check_output("wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status", shell=True))
+    return cmd
 
 def serveur():
     message_client = ""
@@ -50,17 +53,28 @@ def serveur():
             message_client = ""
             while message_client != "kill" and message_client != "reset":
                 print('FD> En attente du client')
-                conn_client, address_client = server_socket.accept()
+                conn, address_client = server_socket.accept()
                 print(f'Client connecté {address_client}')
 
                 message_client = ""
                 while message_client.lower() != m_kill and message_client.lower() != m_reset and message_client.lower() != m_disconnect:
-                    message_client = conn_client.recv(1024).decode()
+                    message_client = conn.recv(1024).decode()
                     print(f"Message reçu {message_client}")
                     execution = execute(message_client)
-                    conn_client.send(execution.encode())
-
-                conn_client.close()
+                    conn.send(execution.encode())
+                    if message_client == 'cpu':
+                        res = cpu()
+                        conn.send(res.encode())
+                        print(f'voici le cpu de la machine: {res}')
+                    if message_client == 'os':
+                        res = OS()
+                        conn.send(res.encode())
+                        print(f"L OS est un {res}")
+                    if message_client == 'ram':
+                        res = ram()
+                        conn.send(res.encode())
+                        print(f"ram {res}")
+                conn.close()
                 print("Fermeture de la socket client")
 
             server_socket.close()
