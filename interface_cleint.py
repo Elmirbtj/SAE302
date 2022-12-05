@@ -18,7 +18,7 @@ class Login(QWidget):
 
         self.addUI()
         client = socket.socket()
-        client.connect(('127.0.0.1', 5008))
+        client.connect(('127.0.0.1', 5004))
         self.client = client
         self.thread()
 
@@ -58,13 +58,21 @@ class Login(QWidget):
         Thread(target=self.send).start()
         Thread(target=self.recv_msg).start()
 
+   #def __envoimsg(self):
+
+       # message = self.__repons.text()
+       # if message != "":
+        #    self.socket.send(message.encode())
+       #     self.__terminous.setText(self.__terminous.text() + "\nme: " + message)
+         #   self.__repons.setText("")
+
     def send_msg(self):
         msg = self.text2.text()
         print(msg)
+        if msg != "":
+            self.client.send(msg.encode())
 
-        self.client.send(msg.encode())
-
-        if (msg.lower() == "quit"):
+        if (msg.lower() == "qrereuit"):
             self.client.close()
         self.text2.clear()
 

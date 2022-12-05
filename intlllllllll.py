@@ -3,7 +3,7 @@ import os
 import sys , subprocess
 
 host = "127.0.0.1"
-port = 5000
+port = 5004
 
 
 def execute_cmd(cmd):

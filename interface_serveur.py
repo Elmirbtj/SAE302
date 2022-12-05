@@ -9,7 +9,7 @@ m_disconnect = "disconnect"
 m_reset = "reset"
 
 host = "localhost"
-port = 5008
+port = 5006
 
 message_client = ""
 class server:
@@ -40,7 +40,7 @@ class server:
         while True:
             try:
                 redata = con.recv(1024).decode()
-                print("Connection de",redata)
+                #print("Connection de",redata)
             except Exception as e:
                 print("", e)
                 self.close_client(con, addr)
@@ -49,7 +49,7 @@ class server:
                 self.close_client(con, addr)
                 break
             if (redata.lower() == "reset"):
-                self.close_client(con, addr)
+                self.reset(con ,addr,redata,server)
                 break
             if (redata.lower() == "kill"):
                 self.kill(con)
@@ -65,16 +65,20 @@ class server:
         con.close()
         print(self.di[addr] + " A QUITER")
         for k in self.li:
-            k.send((self.di[addr] + "dsfdfsfd").encode())
+            k.send((self.di[addr] + "uuuuuuuuuu").encode())
 
     def execute(self,cmd):
         return str(cmd)
 
     def kill(self, con):
 
-        con.send("disconnect".encode())
+        con.send("kill".encode())
+        self.li.remove(con)
+        print("client:", self.li)
         con.close()
+        print(self.di[addr] + " A QUITER")
         self.server.close()
+        print( "Serveur deconecter")
 
     def reset (self,con ,addr,redata,server):
         con.send("reset".encode())
@@ -85,6 +89,9 @@ class server:
         self.server.bind((host, port))
         self.server.listen(5)
         print(redata +"En attente d'un client")
+        print(self.di[addr] + " A QUITER")
+        for k in self.li:
+            k.send((self.di[addr] + "uuuuuuuuuu").encode())
 
 
 

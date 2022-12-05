@@ -7,7 +7,7 @@ m_disconnect = "disconnect"
 m_reset = "reset"
 
 host = "localhost"
-port = 5002
+port = 5004
 
 message_client = ""
 
