@@ -18,7 +18,7 @@ class Login(QWidget):
 
         self.addUI()
         client = socket.socket()
-        client.connect(('127.0.0.1', 5004))
+        client.connect(('127.0.0.1', 5005))
         self.client = client
         self.thread()
 
@@ -33,7 +33,7 @@ class Login(QWidget):
     def addUI(self):
 
 
-        self.text = QPlainTextEdit(self)
+        self.text = QTextEdit(self)
         self.text.setReadOnly(True)
         self.text.setGeometry(10, 10, 359, 250)
         self.text.setStyleSheet('background-color:white;)')
@@ -58,13 +58,7 @@ class Login(QWidget):
         Thread(target=self.send).start()
         Thread(target=self.recv_msg).start()
 
-   #def __envoimsg(self):
 
-       # message = self.__repons.text()
-       # if message != "":
-        #    self.socket.send(message.encode())
-       #     self.__terminous.setText(self.__terminous.text() + "\nme: " + message)
-         #   self.__repons.setText("")
 
     def send_msg(self):
         msg = self.text2.text()
@@ -80,7 +74,7 @@ class Login(QWidget):
 
         while True:
             data = self.client.recv(1024).decode()
-            self.text.appendPlainText('-> ' + data + '\n')
+            self.text.append('-> ' + data + '\n')
 
 
 
