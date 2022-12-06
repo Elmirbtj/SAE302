@@ -6,7 +6,7 @@ import socket
 from threading import Thread
 
 
-class Login(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         QWidget.__init__(self)
 
@@ -22,7 +22,71 @@ class Login(QWidget):
         client.connect(('127.0.0.1', 5006))
         self.client = client
         self.thread()
+        widget = QWidget()
+        self.setCentralWidget(widget)
+        grid = QGridLayout()
+        widget.setLayout(grid)
+        self.__tabs = QTabWidget()
+        self.__tab1 = QWidget()
+        self.__tab2 = QWidget()
+        self.__tabs.addTab(self.__tab1, "Server_commande")
+        self.__tabs.addTab(self.__tab2, "hjhgjghjh")
 
+        self.__tab1.layout = QGridLayout()
+
+        self.__tab1.layout.addWidget(self.text)
+        self.__tab1.setLayout(self.__tab1.layout)
+
+        self.__tab2.layout = QGridLayout()
+
+        self.__tab2.layout.addWidget(self.text)
+        self.__tab2.setLayout(self.__tab2.layout)
+
+        grid.addWidget(self.__tabs, 0, 0, 1, 2)
+        grid.addWidget(self.text, 3, 0)
+        self.__tab1.layout.addWidget(self.text, 2, 0)
+        self.__tab1.layout.addWidget(self.text2, 1, 0)
+        self.__tab1.layout.addWidget(self.button, 1, 1)
+
+        grid = QGridLayout()
+        widget.setLayout(grid)
+        self.__port = QLineEdit("")
+        self.__ip = QLineEdit("")
+        self.__repons = QLineEdit("")
+
+        self.__port.setPlaceholderText("Done port.")
+        self.__ip.setPlaceholderText("done IP")
+        self.__repons.setPlaceholderText("ecris ton text")
+
+        self.__ok = QPushButton("Ok")
+
+        grid.addWidget(self.__port, 1, 2)
+        grid.addWidget(self.__ip, 1, 1)
+        grid.addWidget(self.__repons, 2, 2)
+        grid.addWidget(self.__ok, 1, 0, 1, 1)  # ligne,colonne,hauteur,largueur
+
+        self.__ok.clicked.connect(self.__lancement)
+
+
+
+
+
+    def __lancement(self):
+        HOST = self.__ip.text()
+        PORT = int(self.__port.text())
+        try:
+            self.client.connect((HOST, PORT))
+            self.ecoute.start()
+
+            self.__port.setHidden(True)
+            self.__ip.setHidden(True)
+            self.__ok.setHidden(True)
+
+        except Exception as e:
+            error = "Unable to connect to server \n'{}'".format(str(e))
+            print("[INFO]", error)
+            self.show_error("Connection Error", error)
+            self.text2.text.clear()
 
 
 
@@ -83,69 +147,9 @@ class Login(QWidget):
         self.client.close()
 
 
-class MyTableWidget(QWidget):
-
-    def __init__(self, parent):
-        super(QWidget, self).__init__(parent)
-        self.layout = QVBoxLayout(self)
-        widget = QWidget()
-
-
-        self.__cb = QComboBox()
-        grid = QGridLayout()
-        widget.setLayout(grid)
-
-
-        self.__text = QLineEdit("")
-        self.__lab2 = QLabel("")
-        quit = QPushButton("Quitter")
-        ok = QPushButton("Ok")
-        # Ajouter les composants au grid ayout
-
-        grid.addWidget(self.__text, 1, 2)
-
-
-
-
-
-        self.tabs = QTabWidget()
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-
-
-        self.tabs.addTab(self.tab1, "Connection")
-        self.tabs.addTab(self.tab2, "serveur")
-
-
-
-
-
-
-
-
-        grid.addWidget(ok, 1, 2)
-
-
-
-        self.tab1.layout = QVBoxLayout(self)
-        self.pushButton1 = QPushButton("PyQt5 button")
-
-
-        self.tab1.layout.addWidget(ok)
-
-        self.tab1.layout.addWidget(self.__text)
-
-
-
-
-        self.tab1.setLayout(self.tab1.layout)
-
-
-        self.layout.addWidget(self.tabs)
-        self.setLayout(self.layout)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    dialog = Login()
+    dialog = MainWindow()
     dialog.show()
     sys.exit(app.exec())
