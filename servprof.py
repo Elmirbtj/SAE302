@@ -1,6 +1,6 @@
 import socket
 import sys
-import os , subprocess
+import os , subprocess ,psutil
 
 m_kill = "kill"
 m_disconnect = "disconnect"
@@ -13,18 +13,30 @@ message_client = ""
 
 
 
-def ipconfig():
-    print ("Your OS is ", sys.platform)
-    if sys.platform == 'win32':
-        print (os.system("ipconfig"))
-    elif sys.platform == 'linux2':
-        print (os.system("ifconfig"))
-    time.sleep(5)
+def ip():
+    ip = socket.gethostbyname(name)
+    return f"L'ip de votre machine : {ip}"
+
+def nom():
+    name = socket.gethostname()
+    return f"Le nom de la machine est : {name}"
 
 
 def ram():
-    cmd = str(subprocess.check_output("wmic computersystem get totalphysicalmemory.", shell=True))
-    return cmd
+    cmd = psutil.virtual_memory()
+    ram1 = cmd[0] / 1000000000
+    ram2 = cmd[1] / 1000000000
+    ram3 = cmd[3] / 1000000000
+    return f"ram {ram1}, {ram2},{ram3}"
+
+
+def stockage():
+    stockage = psutil.disk_usage("/")
+    stockage1 = stockage[0] / 1000000000
+    stockage2 = stockage[1] / 1000000000
+    stockage3 = stockage[2] / 1000000000
+    return f"Stockage total {stockage1}\n  , {stockage2}\n , {stockage3}"
+
 
 
 def OS():
@@ -35,8 +47,9 @@ def OS():
         return cmd
 
 def cpu ():
-    cmd = str(subprocess.check_output("wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status", shell=True))
-    return cmd
+    cpu = psutil.cpu_count()
+    #cmd = str(subprocess.check_output("wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status", shell=True))
+    return cpu
 
 def execute(cmd):
     if cmd == 'cpu':
@@ -55,6 +68,20 @@ def execute(cmd):
         print(f"ram {res}")
 
 
+    elif cmd == 'stockage':
+        res = stockage()
+
+        print(f"{res}")
+
+    elif cmd == 'ip':
+        res = ip()
+
+        print(f"{res}")
+
+    elif cmd == 'name':
+        res = nom()
+
+        print(f"{res}")
 
     elif cmd[0:4] == "DOS:":
         re = cmd.split(':')[1]
@@ -67,6 +94,9 @@ def execute(cmd):
         res = subprocess.getoutput(cmd)
 
         return f"{res}"
+
+
+
     else :
         res = "Unknow Command"
     return str(res)
