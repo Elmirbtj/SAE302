@@ -62,9 +62,9 @@ def execute(cmd):
 
         return f"{res}"
 
-    elif cmd[0:5] == "ping ":
-        re = cmd.split('')[1]
-        res = subprocess.check_output(re, shell=True).decode("cp850")
+    elif cmd[0:4] == "ping":
+        re = cmd.split(' ')[1]
+        res = subprocess.getoutput(cmd)
 
         return f"{res}"
     else :
