@@ -11,8 +11,7 @@ port = 5006
 
 message_client = ""
 
-def execute(cmd):
-    return str(cmd)
+
 
 def ipconfig():
     print ("Your OS is ", sys.platform)
@@ -39,6 +38,42 @@ def cpu ():
     cmd = str(subprocess.check_output("wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status", shell=True))
     return cmd
 
+def execute(cmd):
+    if cmd == 'cpu':
+        res = cpu()
+
+        print(f'voici le cpu de la machine: {res}')
+
+    elif cmd == 'os':
+        res = OS()
+
+        print(f"L OS est un {res}")
+
+    elif cmd == 'ram':
+        res = ram()
+
+        print(f"ram {res}")
+
+
+
+    elif cmd[0:4] == "DOS:":
+        re = cmd.split(':')[1]
+        res = subprocess.check_output(re,shell =True).decode("cp850")
+
+        return f"{res}"
+
+    elif cmd[0:5] == "ping ":
+        re = cmd.split('')[1]
+        res = subprocess.check_output(re, shell=True).decode("cp850")
+
+        return f"{res}"
+    else :
+        res = "Unknow Command"
+    return str(res)
+
+
+
+
 def serveur():
     message_client = ""
     while message_client != "kill":
@@ -62,18 +97,8 @@ def serveur():
                     print(f"Message reçu {message_client}")
                     execution = execute(message_client)
                     conn.send(execution.encode())
-                    if message_client == 'cpu':
-                        res = cpu()
-                        conn.send(res.encode())
-                        print(f'voici le cpu de la machine: {res}')
-                    if message_client == 'os':
-                        res = OS()
-                        conn.send(res.encode())
-                        print(f"L OS est un {res}")
-                    if message_client == 'ram':
-                        res = ram()
-                        conn.send(res.encode())
-                        print(f"ram {res}")
+
+
                 conn.close()
                 print("Fermeture de la socket client")
 

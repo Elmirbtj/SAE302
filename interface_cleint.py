@@ -8,7 +8,8 @@ from threading import Thread
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        QWidget.__init__(self)
+        super().__init__()
+
 
         self.setGeometry(600, 300, 400, 300)
         self.setWindowTitle("interface")
@@ -19,7 +20,7 @@ class MainWindow(QMainWindow):
 
         self.addUI()
         client = socket.socket()
-        client.connect(('127.0.0.1', 5006))
+
         self.client = client
         self.thread()
         widget = QWidget()
@@ -30,7 +31,7 @@ class MainWindow(QMainWindow):
         self.__tab1 = QWidget()
         self.__tab2 = QWidget()
         self.__tabs.addTab(self.__tab1, "Server_commande")
-        self.__tabs.addTab(self.__tab2, "hjhgjghjh")
+        self.__tabs.addTab(self.__tab2, "Connection")
 
         self.__tab1.layout = QGridLayout()
 
@@ -48,22 +49,27 @@ class MainWindow(QMainWindow):
         self.__tab1.layout.addWidget(self.text2, 1, 0)
         self.__tab1.layout.addWidget(self.button, 1, 1)
 
+
         grid = QGridLayout()
         widget.setLayout(grid)
         self.__port = QLineEdit("")
         self.__ip = QLineEdit("")
-        self.__repons = QLineEdit("")
+
 
         self.__port.setPlaceholderText("Done port.")
         self.__ip.setPlaceholderText("done IP")
-        self.__repons.setPlaceholderText("ecris ton text")
 
-        self.__ok = QPushButton("Ok")
+
+        self.__ok = QPushButton("Connection")
 
         grid.addWidget(self.__port, 1, 2)
         grid.addWidget(self.__ip, 1, 1)
-        grid.addWidget(self.__repons, 2, 2)
+
         grid.addWidget(self.__ok, 1, 0, 1, 1)  # ligne,colonne,hauteur,largueur
+
+        self.__tab2.layout.addWidget(self.__ip, 2, 0)
+        self.__tab2.layout.addWidget(self.__port, 1, 0)
+        self.__tab2.layout.addWidget(self.__ok, 1, 1)
 
         self.__ok.clicked.connect(self.__lancement)
 
@@ -76,18 +82,13 @@ class MainWindow(QMainWindow):
         PORT = int(self.__port.text())
         try:
             self.client.connect((HOST, PORT))
-            self.ecoute.start()
+            Thread(target=self.recv_msg).start()
+            self.__ip.setText("")
+            self.__port.setText("")
 
-            self.__port.setHidden(True)
-            self.__ip.setHidden(True)
-            self.__ok.setHidden(True)
 
         except Exception as e:
-            error = "Unable to connect to server \n'{}'".format(str(e))
-            print("[INFO]", error)
-            self.show_error("Connection Error", error)
-            self.text2.text.clear()
-
+            pass
 
 
     def on_click(self):
@@ -120,7 +121,6 @@ class MainWindow(QMainWindow):
 
     def thread(self):
         Thread(target=self.send).start()
-        Thread(target=self.recv_msg).start()
 
 
 
@@ -130,8 +130,8 @@ class MainWindow(QMainWindow):
         if msg != "" :
             self.client.send(msg.encode())
 
-        if (msg.lower() == "qrereuit"):
-            self.client.close()
+        if (msg.lower() == "reset"):
+            self.__lancement()
         self.text2.clear()
 
 
