@@ -7,13 +7,14 @@ m_disconnect = "disconnect"
 m_reset = "reset"
 
 host = "localhost"
-port = 5006
+port = int(input("Mettez votre port :"))
 
 message_client = ""
 
 
 
 def ip():
+    name = socket.gethostname()
     ip = socket.gethostbyname(name)
     return f"L'ip de votre machine : {ip}"
 
@@ -27,7 +28,9 @@ def ram():
     ram1 = cmd[0] / 1000000000
     ram2 = cmd[1] / 1000000000
     ram3 = cmd[3] / 1000000000
-    return f"ram {ram1}, {ram2},{ram3}"
+    return f"Memoire Total :{ram1}\n " \
+           f"Memoire utilisée :{ram2} \n" \
+           f"Memoire libre :{ram3}"
 
 
 def stockage():
@@ -78,7 +81,7 @@ def execute(cmd):
 
         print(f"{res}")
 
-    elif cmd == 'name':
+    elif cmd == 'hostname':
         res = nom()
 
         print(f"{res}")
@@ -98,7 +101,7 @@ def execute(cmd):
 
 
     else :
-        res = "Unknow Command"
+        res = "Unknown Command"
     return str(res)
 
 

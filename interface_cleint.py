@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
 
-        self.setGeometry(600, 300, 400, 300)
+        self.setGeometry(600, 300, 600, 500)
         self.setWindowTitle("interface")
         palette = QtGui.QPalette()
         #icon = QtGui.QPixmap(r'.https://www.shutterstock.com/image-illustration/abstract-wave-technology-background-blue-260nw-2152448863.jpg')
@@ -30,8 +30,8 @@ class MainWindow(QMainWindow):
         self.__tabs = QTabWidget()
         self.__tab1 = QWidget()
         self.__tab2 = QWidget()
-        self.__tabs.addTab(self.__tab1, "Server_commande")
         self.__tabs.addTab(self.__tab2, "Connection")
+        self.__tabs.addTab(self.__tab1, "Server_commande")
 
         self.__tab1.layout = QGridLayout()
 
@@ -56,8 +56,8 @@ class MainWindow(QMainWindow):
         self.__ip = QLineEdit("")
 
 
-        self.__port.setPlaceholderText("Done port.")
-        self.__ip.setPlaceholderText("done IP")
+        self.__port.setPlaceholderText("Port")
+        self.__ip.setPlaceholderText("IP")
 
 
         self.__ok = QPushButton("Connection")
@@ -73,22 +73,25 @@ class MainWindow(QMainWindow):
 
         self.__ok.clicked.connect(self.__lancement)
 
+        self.li = []
 
 
-
-
-    def __lancement(self):
+    def __lancement(self,li):
         HOST = self.__ip.text()
         PORT = int(self.__port.text())
+
         try:
+
             self.client.connect((HOST, PORT))
-            Thread(target=self.recv_msg).start()
+            Thread(target=self.recv_msg ,args=(self.li)).start()
             self.__ip.setText("")
             self.__port.setText("")
+            self.li.append(self.client.connect((HOST, PORT)))
 
 
         except Exception as e:
             pass
+
 
 
     def on_click(self):
@@ -130,16 +133,19 @@ class MainWindow(QMainWindow):
         if msg != "" :
             self.client.send(msg.encode())
 
-        if (msg.lower() == "reset"):
-            self.__lancement()
-        self.text2.clear()
+        #if (msg.lower() == "reset"):
+
+        #self.text2.clear()
 
 
     def recv_msg(self):
-
         while True:
-            data = self.client.recv(1024).decode()
-            self.text.append('-> ' + data + '\n')
+            try:
+
+                data = self.client.recv(1024).decode()
+                self.text.append('-> ' + data + '\n')
+            except:
+                pass
 
 
 
