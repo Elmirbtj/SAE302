@@ -11,7 +11,12 @@ port = int(input("Mettez votre port :"))
 
 message_client = ""
 
-
+def help():
+    help =["ip" , "hostname","ram","cpu","os"]
+    re =""
+    for element in help:
+       re = element
+    return re
 
 def ip():
     name = socket.gethostname()
@@ -81,6 +86,11 @@ def execute(cmd):
 
         print(f"{res}")
 
+    elif cmd == 'help':
+        res = help()
+
+        print(f"{res}")
+
     elif cmd == 'hostname':
         res = nom()
 
@@ -130,8 +140,10 @@ def serveur():
                     print(f"Message reçu {message_client}")
                     execution = execute(message_client)
                     conn.send(execution.encode())
-
-
+                try:
+                    conn.send('DISCONNECT'.encode())
+                except:
+                    pass
                 conn.close()
                 print("Fermeture de la socket client")
 

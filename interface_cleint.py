@@ -18,13 +18,17 @@ class MainWindow(QMainWindow):
         #palette.setBrush(self.backgroundRole(), QtGui.QBrush(icon))
         self.setPalette(palette)
 
-        self.addUI()
-        client = socket.socket()
+        self.setStyleSheet("""
+        QMainWindow{background:black}
+        """)
 
-        self.client = client
+        self.addUI()
+
+        self.client = socket.socket()
         self.thread()
         widget = QWidget()
         self.setCentralWidget(widget)
+        self.connectionClosed = True
         grid = QGridLayout()
         widget.setLayout(grid)
         self.__tabs = QTabWidget()
@@ -62,11 +66,6 @@ class MainWindow(QMainWindow):
 
         self.__ok = QPushButton("Connection")
 
-        grid.addWidget(self.__port, 1, 2)
-        grid.addWidget(self.__ip, 1, 1)
-
-        grid.addWidget(self.__ok, 1, 0, 1, 1)  # ligne,colonne,hauteur,largueur
-
         self.__tab2.layout.addWidget(self.__ip, 2, 0)
         self.__tab2.layout.addWidget(self.__port, 1, 0)
         self.__tab2.layout.addWidget(self.__ok, 1, 1)
@@ -75,34 +74,32 @@ class MainWindow(QMainWindow):
 
         self.li = []
 
-
-    def __lancement(self,li):
-        HOST = self.__ip.text()
-        PORT = int(self.__port.text())
-
-        try:
-
-            self.client.connect((HOST, PORT))
-            Thread(target=self.recv_msg ,args=(self.li)).start()
-            self.__ip.setText("")
-            self.__port.setText("")
-            self.li.append(self.client.connect((HOST, PORT)))
+        self.button.clicked.connect(self.send_msg)
+        self.text2.returnPressed.connect(self.send_msg)
 
 
-        except Exception as e:
-            pass
+    def __lancement(self):
+        if len(self.__ip.text()) > 0 and self.__port.text().isdigit():
+            HOST = self.__ip.text()
+            PORT = int(self.__port.text())
+            try:
+                self.client = socket.socket()
+                self.client.connect((HOST, PORT))
+                self.connectionClosed = False
+                Thread(target=self.recv_msg).start()
+                self.__ip.setText("")
+                self.__port.setText("")
+            except:
+                print('ERREUR DE CONNECTION')
+        else:
+            print('ERREUR DE FORMULAIRE')
 
-
-
-    def on_click(self):
-        print("message envoyer")
-        self.send_msg()
-        self.text2.clear()
 
     def addUI(self):
 
 
         self.text = QTextEdit(self)
+        self.text.verticalScrollBar().rangeChanged.connect(lambda: self.text.verticalScrollBar().setValue(self.text.verticalScrollBar().maximum()))
         self.text.setReadOnly(True)
         self.text.setGeometry(10, 10, 359, 250)
         self.text.setStyleSheet('background-color:white;)')
@@ -119,38 +116,40 @@ class MainWindow(QMainWindow):
         self.button.setGeometry(310, 260, 60, 30)
 
 
-    def send(self):
-        self.button.clicked.connect(self.on_click)
-
-    def thread(self):
-        Thread(target=self.send).start()
-
-
 
     def send_msg(self):
-        msg = self.text2.text()
-        print(msg)
-        if msg != "" :
-            self.client.send(msg.encode())
-
-        #if (msg.lower() == "reset"):
-
-        #self.text2.clear()
+        if len(self.text2.text()) > 0:
+            msg = self.text2.text()
+            self.text.append('MOI : ' + msg + '\n')
+            if not self.connectionClosed:
+                try:
+                    print(msg)
+                    if msg != "":
+                        self.client.send(msg.encode())
+                except:
+                    self.text.append('Impossible de communiquer avec le server! \n')
+            else:
+                self.text.append('Déconnecté. \n')
+            self.text2.clear()
 
 
     def recv_msg(self):
-        while True:
+        while not self.connectionClosed:
             try:
-
                 data = self.client.recv(1024).decode()
-                self.text.append('-> ' + data + '\n')
+                self.text.append(data + '\n')
+                if data == 'DISCONNECT':
+                    self.client.close()
+                    self.connectionClosed = True
             except:
                 pass
 
 
 
     def closeEvent(self, QCloseEvent):
+        self.connectionClosed = True
         self.client.close()
+        QCloseEvent.accept()
 
 
 
