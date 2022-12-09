@@ -125,7 +125,7 @@ def serveur():
         while message_client != "kill":
             server_socket = socket.socket()
             server_socket.bind((host, port))
-            server_socket.listen(1)
+            server_socket.listen(2)
             print(f"Socket ouverte sur {host} - {port}")
 
             message_client = ""
