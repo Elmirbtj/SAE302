@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 import sys
 import socket
 from threading import Thread
-
+from PyQt5.QtCore import QCoreApplication
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -56,8 +56,8 @@ class MainWindow(QMainWindow):
 
         grid = QGridLayout()
         widget.setLayout(grid)
-        self.__port = QLineEdit("")
-        self.__ip = QLineEdit("")
+        self.__port = QLineEdit("5")
+        self.__ip = QLineEdit("localhost")
 
 
         self.__port.setPlaceholderText("Port")
@@ -76,7 +76,8 @@ class MainWindow(QMainWindow):
 
         self.button.clicked.connect(self.send_msg)
         self.text2.returnPressed.connect(self.send_msg)
-
+        self.__threadecoute = Thread(target=self.send_msg())
+        self.__threadecoute.start()
 
     def __lancement(self):
         if len(self.__ip.text()) > 0 and self.__port.text().isdigit():
@@ -90,6 +91,7 @@ class MainWindow(QMainWindow):
                 self.__ip.setText("")
                 self.__port.setText("")
             except:
+
                 print('ERREUR DE CONNECTION')
         else:
             print('ERREUR DE FORMULAIRE')
@@ -150,7 +152,7 @@ class MainWindow(QMainWindow):
         self.connectionClosed = True
         self.client.close()
         QCloseEvent.accept()
-
+        QCoreApplication.exit(0)
 
 
 if __name__ == "__main__":
